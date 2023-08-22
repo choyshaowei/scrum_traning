@@ -155,13 +155,17 @@ class Battleship {
       console.log(
         cliColor.bgGreenBright("------------------------------------------")
       );
+      console.log();
       console.log(
         `Computer shot in ${computerPos.column}${computerPos.row} and ` +
           (isHit ? cliColor.red(`has hit your ship !`) : cliColor.bold(`miss`))
       );
       if (isHit) {
         beep();
-
+        console.log();
+        console.log(
+          cliColor.greenBright("------------------------------------------")
+        );
         console.log(cliColor.yellow("                \\         .  ./"));
         console.log(cliColor.yellow('              \\      .:";\'.:.."   /'));
         console.log(cliColor.yellow("                  (M^^.^~~:.'\")."));
@@ -170,7 +174,11 @@ class Battleship {
         console.log(cliColor.yellow("            -   (\\- |  \\ /  |  /)  -"));
         console.log(cliColor.yellow("                 -\\  \\     /  /-"));
         console.log(cliColor.yellow("                   \\  \\   /  /"));
+        console.log(
+          cliColor.greenBright("------------------------------------------")
+        );
       }
+      console.log();
       console.log(
         cliColor.bgGreenBright("------------------------------------------")
       );
@@ -202,7 +210,7 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      cliColor.magentaBright(
+      cliColor.blue(
         "Please position your fleet (Game board size is from A to H and 1 to 8) :"
       )
     );
@@ -210,12 +218,12 @@ class Battleship {
     this.myFleet.forEach(function (ship) {
       console.log();
       console.log(
-        cliColor.magentaBright(
+        cliColor.blue(
           `Please enter the positions for the ${ship.name} (size: ${ship.size})`
         )
       );
       for (var i = 1; i < ship.size + 1; i++) {
-        console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
+        console.log(cliColor.cyanBright(`Enter position ${i} of ${ship.size} (i.e A3):`));
         const position = readline.question();
         telemetryWorker.postMessage({
           eventName: "Player_PlaceShipPosition",

@@ -89,6 +89,59 @@ class Battleship {
     }
   }
 
+  isValidPosition(ship, newPosition) {
+    // Check if position is within the board
+    if (
+      newPosition.column < letters.A ||
+      newPosition.column > letters.H ||
+      newPosition.row < 1 ||
+      newPosition.row > 8
+    ) {
+      return false;
+    }
+
+    // Check if position overlaps with an existing ship's position
+    for (let existingPosition of ship.positions) {
+      if (
+        existingPosition.column === newPosition.column &&
+        existingPosition.row === newPosition.row
+      ) {
+        return false;
+      }
+    }
+
+    // If it's not the first position of the ship, check continuity
+    if (ship.positions.length > 0) {
+      let lastPosition = ship.positions[ship.positions.length - 1];
+      let diffColumn = Math.abs(lastPosition.column - newPosition.column);
+      let diffRow = Math.abs(lastPosition.row - newPosition.row);
+
+      // Not next to the last position either horizontally or vertically
+      if (diffColumn > 1 || diffRow > 1) {
+        return false;
+      }
+
+      // Diagonal placement
+      if (diffColumn === 1 && diffRow === 1) {
+        return false;
+      }
+
+      // If it's the third or higher position, ensure it's in line with the rest
+      if (ship.positions.length > 1) {
+        let firstPosition = ship.positions[0];
+        let isVertical = firstPosition.column === lastPosition.column;
+
+        if (isVertical && newPosition.column !== lastPosition.column) {
+          return false;
+        } else if (!isVertical && newPosition.row !== lastPosition.row) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   StartGame() {
     console.clear();
     console.log(cliColor.blueBright("                  __"));
@@ -215,25 +268,36 @@ class Battleship {
       )
     );
 
-    this.myFleet.forEach(function (ship) {
+    this.myFleet.forEach((ship) => {
       console.log();
       console.log(
         cliColor.blue(
           `Please enter the positions for the ${ship.name} (size: ${ship.size})`
         )
       );
-      for (var i = 1; i < ship.size + 1; i++) {
-        console.log(cliColor.cyanBright(`Enter position ${i} of ${ship.size} (i.e A3):`));
-        const position = readline.question();
+      for (let i = 1; i <= ship.size; i++) {
+        let isValid = false;
+        let newPosition;
+        let positionInput; // Declare it here
+        do {
+          console.log(cliColor.cyanBright(`Enter position ${i} of ${ship.size} (i.e A3):`));
+          positionInput = readline.question();
+          newPosition = Battleship.ParsePosition(positionInput);
+          isValid = this.isValidPosition(ship, newPosition);
+          if (!isValid) {
+            console.log(cliColor.red("Invalid position. Try again."));
+          }
+        } while (!isValid);
+
         telemetryWorker.postMessage({
           eventName: "Player_PlaceShipPosition",
           properties: {
-            Position: position,
+            Position: positionInput,
             Ship: ship.name,
             PositionInShip: i,
           },
         });
-        ship.addPosition(Battleship.ParsePosition(position));
+        ship.addPosition(newPosition);
       }
     });
   }

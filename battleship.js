@@ -63,6 +63,32 @@ class Battleship {
     this.StartGame();
   }
 
+  NextPosition(key) {
+    const letters = "ABCDEFGH";
+    const maxNumber = 8;
+
+    const letter = key.charAt(0);
+    const number = parseInt(key.substring(1));
+
+    // If the number is less than 10, suggest the next number in the same row
+    if (number < maxNumber) {
+      return letter + (number + 1);
+    } else {
+      // If we are at the end of a row, suggest the first number in the next row
+      const letterIndex = letters.indexOf(letter);
+
+      // If the letter is not 'H', suggest the next letter
+      if (letterIndex < letters.length - 1) {
+        const nextLetter = letters.charAt(letterIndex + 1);
+        return nextLetter + "1";
+      }
+      // If we are at the last position 'H8', loop back to 'A1'
+      else {
+        return "A1";
+      }
+    }
+  }
+
   StartGame() {
     console.clear();
     console.log(cliColor.blueBright("                  __"));
@@ -90,26 +116,33 @@ class Battleship {
 
       if (isHit) {
         beep();
-
-        console.log(cliColor.blue("                \\         .  ./"));
-        console.log(cliColor.blue('              \\      .:";\'.:.."   /'));
-        console.log(cliColor.blue("                  (M^^.^~~:.'\")."));
-        console.log(cliColor.blue("            -   (/  .    . . \\ \\)  -"));
-        console.log(cliColor.blue("               ((| :. ~ ^  :. .|))"));
-        console.log(cliColor.blue("            -   (\\- |  \\ /  |  /)  -"));
-        console.log(cliColor.blue("                 -\\  \\     /  /-"));
-        console.log(cliColor.blue("                   \\  \\   /  /"));
+        console.log();
+        console.log(
+          cliColor.greenBright("------------------------------------------")
+        );
+        console.log(cliColor.yellow("                \\         .  ./"));
+        console.log(cliColor.yellow('              \\      .:";\'.:.."   /'));
+        console.log(cliColor.yellow("                  (M^^.^~~:.'\")."));
+        console.log(cliColor.yellow("            -   (/  .    . . \\ \\)  -"));
+        console.log(cliColor.yellow("               ((| :. ~ ^  :. .|))"));
+        console.log(cliColor.yellow("            -   (\\- |  \\ /  |  /)  -"));
+        console.log(cliColor.yellow("                 -\\  \\     /  /-"));
+        console.log(cliColor.yellow("                   \\  \\   /  /"));
+        console.log(
+          cliColor.greenBright("------------------------------------------")
+        );
       }
 
       console.log(
         isHit
-          ? cliColor.green(
-              "Yeah ! Nice hit !",
-              "Possible next move:",
-              NextPosition(position.toString())
-            )
+          ? cliColor.green("Yeah ! Nice hit !", "Possible next move: ") +
+              cliColor.bold(this.NextPosition(position.toString()))
           : cliColor.yellow("Miss")
       );
+      console.log(
+        cliColor.greenBright("------------------------------------------")
+      );
+      console.log();
 
       var computerPos = this.GetRandomPosition();
       var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
@@ -119,7 +152,9 @@ class Battleship {
         properties: { Position: computerPos.toString(), IsHit: isHit },
       });
 
-      console.log();
+      console.log(
+        cliColor.bgGreenBright("------------------------------------------")
+      );
       console.log(
         `Computer shot in ${computerPos.column}${computerPos.row} and ` +
           (isHit ? cliColor.red(`has hit your ship !`) : cliColor.bold(`miss`))
@@ -127,15 +162,18 @@ class Battleship {
       if (isHit) {
         beep();
 
-        console.log(cliColor.blue("                \\         .  ./"));
-        console.log(cliColor.blue('              \\      .:";\'.:.."   /'));
-        console.log(cliColor.blue("                  (M^^.^~~:.'\")."));
-        console.log(cliColor.blue("            -   (/  .    . . \\ \\)  -"));
-        console.log(cliColor.blue("               ((| :. ~ ^  :. .|))"));
-        console.log(cliColor.blue("            -   (\\- |  \\ /  |  /)  -"));
-        console.log(cliColor.blue("                 -\\  \\     /  /-"));
-        console.log(cliColor.blue("                   \\  \\   /  /"));
+        console.log(cliColor.yellow("                \\         .  ./"));
+        console.log(cliColor.yellow('              \\      .:";\'.:.."   /'));
+        console.log(cliColor.yellow("                  (M^^.^~~:.'\")."));
+        console.log(cliColor.yellow("            -   (/  .    . . \\ \\)  -"));
+        console.log(cliColor.yellow("               ((| :. ~ ^  :. .|))"));
+        console.log(cliColor.yellow("            -   (\\- |  \\ /  |  /)  -"));
+        console.log(cliColor.yellow("                 -\\  \\     /  /-"));
+        console.log(cliColor.yellow("                   \\  \\   /  /"));
       }
+      console.log(
+        cliColor.bgGreenBright("------------------------------------------")
+      );
     } while (true);
   }
 
@@ -153,32 +191,6 @@ class Battleship {
     var number = Math.floor(Math.random() * rows);
     var result = new position(letter, number);
     return result;
-  }
-
-  NextPosition(key) {
-    const letters = "ABCDEFGH";
-    const maxNumber = 8;
-
-    const letter = key.charAt(0);
-    const number = parseInt(key.substring(1));
-
-    // If the number is less than 10, suggest the next number in the same row
-    if (number < maxNumber) {
-      return letter + (number + 1);
-    } else {
-      // If we are at the end of a row, suggest the first number in the next row
-      const letterIndex = letters.indexOf(letter);
-
-      // If the letter is not 'H', suggest the next letter
-      if (letterIndex < letters.length - 1) {
-        const nextLetter = letters.charAt(letterIndex + 1);
-        return nextLetter + "1";
-      }
-      // If we are at the last position 'H8', loop back to 'A1'
-      else {
-        return "A1";
-      }
-    }
   }
 
   InitializeGame() {

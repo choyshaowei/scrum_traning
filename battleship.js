@@ -246,13 +246,36 @@ class Battleship {
     return new position(letter, number);
   }
 
+  computerUsedPosition = [];
+
+  generateRandomShootPosition(min = 1, max = 8) {
+    let col, row;
+    do {
+      col = Math.floor(Math.random() * (max - min + 1)) + min;
+      row = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (this.isPositionUsed(col, row));
+
+    this.computerUsedPosition.push([col, row]);
+    return [col, row];
+  }
+
+  isPositionUsed(col, row) {
+    for (let position of this.computerUsedPosition) {
+      if (position[0] === col && position[1] === row) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   GetRandomPosition() {
     var rows = 8;
     var lines = 8;
-    var rndColumn = Math.floor(Math.random() * lines);
+    var rndColumn = this.generateRandomShootPosition()[0];
     var letter = letters.get(rndColumn + 1);
-    var number = Math.floor(Math.random() * rows);
+    var number = this.generateRandomShootPosition()[1];
     var result = new position(letter, number);
+
     return result;
   }
 
@@ -321,7 +344,6 @@ class Battleship {
   }
 
   InitializeEnemyFleet() {
-    console.log("enermy here");
     this.enemyFleet = gameController.InitializeShips();
 
     let enemyColFleet = this.generateRandomPosition();
@@ -335,10 +357,10 @@ class Battleship {
     this.usedPosition.push(enemyColFleet);
     enemyColFleet = this.generateRandomPosition();
 
+    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 5));
     this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 6));
     this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 7));
     this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 8));
-    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 9));
 
     this.usedPosition.push(enemyColFleet);
     enemyColFleet = this.generateRandomPosition();
@@ -361,7 +383,7 @@ class Battleship {
     this.enemyFleet[4].addPosition(new position(this.enemyColFleet, 6));
 
     this.usedPosition.push(enemyColFleet);
-    console.log("enermy");
+    // console.log("enermy");
     // console.log("enermy", this.enemyFleet[0]);
     // console.log("enermy", new position(letters.A, 5));
   }

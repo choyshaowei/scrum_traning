@@ -211,7 +211,9 @@ class Battleship {
       console.log();
       console.log(
         `Computer shot in ${computerPos.column}${computerPos.row} and ` +
-          (isHit ? cliColor.bgRed(`has hit your ship !`) : cliColor.bold(`miss`))
+          (isHit
+            ? cliColor.bgRed(`has hit your ship !`)
+            : cliColor.bold(`miss`))
       );
       if (isHit) {
         beep();
@@ -263,7 +265,7 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      cliColor. bgWhite(
+      cliColor.bgWhite(
         "Please position your fleet (Game board size is from A to H and 1 to 8) :"
       )
     );
@@ -271,7 +273,7 @@ class Battleship {
     this.myFleet.forEach((ship) => {
       console.log();
       console.log(
-        cliColor. bgWhite(
+        cliColor.bgWhite(
           `Please enter the positions for the ${ship.name} (size: ${ship.size})`
         )
       );
@@ -280,7 +282,9 @@ class Battleship {
         let newPosition;
         let positionInput; // Declare it here
         do {
-          console.log(cliColor.cyanBright(`Enter position ${i} of ${ship.size} (i.e A3):`));
+          console.log(
+            cliColor.cyanBright(`Enter position ${i} of ${ship.size} (i.e A3):`)
+          );
           positionInput = readline.question();
           newPosition = Battleship.ParsePosition(positionInput);
           isValid = this.isValidPosition(ship, newPosition);
@@ -302,35 +306,64 @@ class Battleship {
     });
   }
 
-  generateRandomPosition() {
-    const alphabet = "12345678"
-    return alphabet[Math.floor(Math.random() * alphabet.length)]
+  usedPosition = [];
+
+  generateRandomPosition(min = 1, max = 8) {
+    let position;
+    do {
+      position = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (this.usedPosition.includes(position));
+    {
+      this.usedPosition.push(position);
+      console.log("position", position);
+      return position;
+    }
   }
 
   InitializeEnemyFleet() {
+    console.log("enermy here");
     this.enemyFleet = gameController.InitializeShips();
 
-    this.enemyFleet[0].addPosition(new position(this.generateRandomPosition(), 4));
-    this.enemyFleet[0].addPosition(new position(this.generateRandomPosition(), 5));
-    this.enemyFleet[0].addPosition(new position(this.generateRandomPosition(), 6));
-    this.enemyFleet[0].addPosition(new position(this.generateRandomPosition(), 7));
-    this.enemyFleet[0].addPosition(new position(this.generateRandomPosition(), 8));
+    let enemyColFleet = this.generateRandomPosition();
 
-    this.enemyFleet[1].addPosition(new position(this.generateRandomPosition(), 6));
-    this.enemyFleet[1].addPosition(new position(this.generateRandomPosition(), 7));
-    this.enemyFleet[1].addPosition(new position(this.generateRandomPosition(), 8));
-    this.enemyFleet[1].addPosition(new position(this.generateRandomPosition(), 9));
+    this.enemyFleet[0].addPosition(new position(this.enemyColFleet, 4));
+    this.enemyFleet[0].addPosition(new position(this.enemyColFleet, 5));
+    this.enemyFleet[0].addPosition(new position(this.enemyColFleet, 6));
+    this.enemyFleet[0].addPosition(new position(this.enemyColFleet, 7));
+    this.enemyFleet[0].addPosition(new position(this.enemyColFleet, 8));
 
-    this.enemyFleet[2].addPosition(new position(this.generateRandomPosition(), 3));
-    this.enemyFleet[2].addPosition(new position(this.generateRandomPosition(), 3));
-    this.enemyFleet[2].addPosition(new position(this.generateRandomPosition(), 3));
+    this.usedPosition.push(enemyColFleet);
+    enemyColFleet = this.generateRandomPosition();
 
-    this.enemyFleet[3].addPosition(new position(this.generateRandomPosition(), 8));
-    this.enemyFleet[3].addPosition(new position(this.generateRandomPosition(), 8));
-    this.enemyFleet[3].addPosition(new position(this.generateRandomPosition(), 8));
+    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 6));
+    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 7));
+    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 8));
+    this.enemyFleet[1].addPosition(new position(this.enemyColFleet, 9));
 
-    this.enemyFleet[4].addPosition(new position(this.generateRandomPosition(), 5));
-    this.enemyFleet[4].addPosition(new position(this.generateRandomPosition(), 6));
+    this.usedPosition.push(enemyColFleet);
+    enemyColFleet = this.generateRandomPosition();
+
+    this.enemyFleet[2].addPosition(new position(this.enemyColFleet, 3));
+    this.enemyFleet[2].addPosition(new position(this.enemyColFleet, 3));
+    this.enemyFleet[2].addPosition(new position(this.enemyColFleet, 3));
+
+    this.usedPosition.push(enemyColFleet);
+    enemyColFleet = this.generateRandomPosition();
+
+    this.enemyFleet[3].addPosition(new position(this.enemyColFleet, 8));
+    this.enemyFleet[3].addPosition(new position(this.enemyColFleet, 8));
+    this.enemyFleet[3].addPosition(new position(this.enemyColFleet, 8));
+
+    this.usedPosition.push(enemyColFleet);
+    enemyColFleet = this.generateRandomPosition();
+
+    this.enemyFleet[4].addPosition(new position(this.enemyColFleet, 5));
+    this.enemyFleet[4].addPosition(new position(this.enemyColFleet, 6));
+
+    this.usedPosition.push(enemyColFleet);
+    console.log("enermy");
+    // console.log("enermy", this.enemyFleet[0]);
+    // console.log("enermy", new position(letters.A, 5));
   }
 }
 

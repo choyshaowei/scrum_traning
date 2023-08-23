@@ -248,7 +248,7 @@ class Battleship {
 
   computerUsedPosition = [];
 
-  generateRandomShootPosition(min = 1, max = 8) {
+  generateRandomShootPosition(min = 0, max = 7) {
     let col, row;
     do {
       col = Math.floor(Math.random() * (max - min + 1)) + min;

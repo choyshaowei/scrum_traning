@@ -211,7 +211,7 @@ class Battleship {
       console.log();
       console.log(
         `Computer shot in ${computerPos.column}${computerPos.row} and ` +
-          (isHit ? cliColor.red(`has hit your ship !`) : cliColor.bold(`miss`))
+          (isHit ? cliColor.bgRed(`has hit your ship !`) : cliColor.bold(`miss`))
       );
       if (isHit) {
         beep();
@@ -263,7 +263,7 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      cliColor.blue(
+      cliColor. bgWhite(
         "Please position your fleet (Game board size is from A to H and 1 to 8) :"
       )
     );
@@ -271,7 +271,7 @@ class Battleship {
     this.myFleet.forEach((ship) => {
       console.log();
       console.log(
-        cliColor.blue(
+        cliColor. bgWhite(
           `Please enter the positions for the ${ship.name} (size: ${ship.size})`
         )
       );
@@ -285,7 +285,7 @@ class Battleship {
           newPosition = Battleship.ParsePosition(positionInput);
           isValid = this.isValidPosition(ship, newPosition);
           if (!isValid) {
-            console.log(cliColor.red("Invalid position. Try again."));
+            console.log(cliColor.bgRed("Invalid position. Try again."));
           }
         } while (!isValid);
 
